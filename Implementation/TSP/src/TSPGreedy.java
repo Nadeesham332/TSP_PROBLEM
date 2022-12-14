@@ -16,8 +16,7 @@ public class TSPGreedy {
         visitedRouteList.add(startingNode);
         int[] route = new int[tsp.length];
 
-        // Traverse the adjacency
-        // matrix tsp[][]
+        // Traverse the adjacency matrix tsp[][]
         while (i < tsp.length && j < tsp[i].length) {
 
             // Corner of the Matrix
@@ -25,9 +24,7 @@ public class TSPGreedy {
                 break;
             }
 
-            // If this path is unvisited then
-            // and if the cost is less then
-            // update the cost
+            // If this path is unvisited then and if the cost is less then update the cost
             if (j != i && !(visitedRouteList.contains(j))) {
                 if (tsp[i][j] < min) {
                     min = tsp[i][j];
@@ -36,8 +33,7 @@ public class TSPGreedy {
             }
             j++;
 
-            // Check all paths from the
-            // ith indexed city
+            // Check all paths from the ith indexed city
             if (j == tsp[i].length) {
                 sum += min;
                 min = Integer.MAX_VALUE;
@@ -48,18 +44,9 @@ public class TSPGreedy {
             }
         }
 
-        // Update the ending city in array
-        // from city which was last visited
+        // Add the cost from the ending city to starting city
         i = route[counter - 1] - 1;
-
-        for (j = 0; j < tsp.length; j++) {
-
-            if ((i != j) && tsp[i][j] < min) {
-                min = tsp[i][j];
-                route[counter] = j + 1;
-            }
-        }
-        sum += min;
+        sum += tsp[i][startingNode];
 
 
         // Print path from starting node to final node
