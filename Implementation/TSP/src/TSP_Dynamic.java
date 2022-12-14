@@ -39,12 +39,12 @@ public class TSP_Dynamic {
         if (ranSolver) return;
 
         final int END_STATE = (1 << N) - 1;
-        Double[][] memo = new Double[N][1 << N];
+        Double[][] memory = new Double[N][1 << N];
 
-        // Add all outgoing edges from the starting node to memo table.
+        // Add all outgoing edges from the starting node to memory table.
         for (int end = 0; end < N; end++) {
             if (end == start) continue;
-            memo[end][(1 << start) | (1 << end)] = distance[start][end];
+            memory[end][(1 << start) | (1 << end)] = distance[start][end];
         }
 
         for (int r = 3; r <= N; r++) {
@@ -56,20 +56,20 @@ public class TSP_Dynamic {
                     double minDist = Double.POSITIVE_INFINITY;
                     for (int end = 0; end < N; end++) {
                         if (end == start || end == next || notIn(end, subset)) continue;
-                        double newDistance = memo[end][subsetWithoutNext] + distance[end][next];
+                        double newDistance = memory[end][subsetWithoutNext] + distance[end][next];
                         if (newDistance < minDist) {
                             minDist = newDistance;
                         }
                     }
-                    memo[next][subset] = minDist;
+                    memory[next][subset] = minDist;
                 }
             }
         }
 
-        // Connect tour back to starting node and minimize cost.
+        // path back to starting node and minimize cost
         for (int i = 0; i < N; i++) {
             if (i == start) continue;
-            double tourCost = memo[i][END_STATE] + distance[i][start];
+            double tourCost = memory[i][END_STATE] + distance[i][start];
             if (tourCost < minTourCost) {
                 minTourCost = tourCost;
             }
@@ -79,15 +79,15 @@ public class TSP_Dynamic {
         int state = END_STATE;
         tour.add(start);
 
-        // Reconstruct TSP path from memo table.
+        // get the TSP path from memory table
         for (int i = 1; i < N; i++) {
 
             int index = -1;
             for (int j = 0; j < N; j++) {
                 if (j == start || notIn(j, state)) continue;
                 if (index == -1) index = j;
-                double prevDist = memo[index][state] + distance[index][lastIndex];
-                double newDist  = memo[j][state] + distance[j][lastIndex];
+                double prevDist = memory[index][state] + distance[index][lastIndex];
+                double newDist  = memory[j][state] + distance[j][lastIndex];
                 if (newDist < prevDist) {
                     index = j;
                 }
